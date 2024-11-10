@@ -1,0 +1,11 @@
+[package]
+name = "spaceship"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+colored = "2.1.0"
+rand = "0.8.5"
+termsize = "0.1.9"
+strum = { version = "0.26.3", features = ["derive"] }
+clearscreen = "3.0.0"
