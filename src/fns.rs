@@ -1,3 +1,4 @@
+use colored::Colorize;
 use rand::Rng;
 use std::io;
 
@@ -68,4 +69,15 @@ pub fn wait() {
 
 pub fn cls() {
     clearscreen::clear().expect("failed to clear screen");
+}
+
+pub fn colour_crew_string(p: u32) -> String {
+    match p {
+        800..=1000 => format!("{p}").green().to_string(),
+        600..800 => format!("{p}").bright_green().to_string(),
+        400..600 => format!("{p}").yellow().to_string(),
+        200..400 => format!("{p}").bright_red().to_string(),
+        0..200 => format!("{p}").red().to_string(),
+        _ => format!("{p}"),
+    }
 }

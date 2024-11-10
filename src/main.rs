@@ -36,17 +36,19 @@ impl DetectorState {
             .take((3 - self.power).into())
             .collect();
 
-        format!("{}{}", on.green(), off.white())
+        format!("{}{}", on.bright_green(), off.yellow())
     }
 }
 
 struct Spaceship {
+    crew: u32,
     detectors: Detectors,
 }
 
 impl Spaceship {
     fn new() -> Self {
         Self {
+            crew: 1000,
             detectors: Detectors {
                 oxygen: DetectorState::new(),
                 water: DetectorState::new(),
@@ -58,12 +60,15 @@ impl Spaceship {
 
     fn display(&self) {
         println!(
-            r#"Detectors:
--   Oxygen {}:    {}
--   Water {}:     {}
--   Energy {}:    {}
--   Nutrients {}: {}
+            r#"Crew: {}
+            
+Detectors:
+-   Oxygen    {}:  {}
+-   Water     {}:  {}
+-   Energy    {}:  {}
+-   Nutrients {}:  {}
 "#,
+            colour_crew_string(self.crew),
             self.detectors.oxygen.pct_string(),
             self.detectors.oxygen.power_string(),
             self.detectors.water.pct_string(),
@@ -196,7 +201,7 @@ fn event(s: &mut Spaceship) {
         let s = match hit {
             0 => {
                 s.detectors.oxygen.val =
-                    s.detectors.oxygen.val.saturating_sub(rng.gen_range(5..25));
+                    s.detectors.oxygen.val.saturating_sub(rng.gen_range(10..33));
                 println!("Your oxygen sensors were hit!");
                 s.detectors.oxygen.pct_string()
             }
@@ -348,10 +353,7 @@ fn main() {
 
             println!("You landed on your lovely new home of: {}", name);
             println!();
-            println!(
-                "Your score was: {}, not bad",
-                p.score().to_string().bold()
-            );
+            println!("Your score was: {}, not bad", p.score().to_string().bold());
             wait();
 
             br();
@@ -364,7 +366,26 @@ fn main() {
         br();
 
         event(&mut s);
+        br();
 
+        wait();
+
+        let d = rng.gen_range(20..80);
+        s.crew = s.crew.saturating_sub(d);
+
+        if s.crew > 0 {
+            println!(
+                "Sadly, {d} people have frozen in their cryogenic chambers during the journey"
+            );
+        } else {
+            println!("Sadly all of your crew have frozen in their cryogenic chambers");
+            println!();
+            println!("{}", "GAME OVER".red());
+            println!("Your score was: 0, do better next time");
+            return;
+        }
+
+        println!();
         br();
 
         wait();
